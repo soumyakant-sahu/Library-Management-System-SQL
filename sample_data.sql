@@ -58,3 +58,29 @@ INSERT INTO books (title, author_id, category_id, isbn, published_year, total_co
 ('A Tale of Two Cities', 16, 6, '9780486406510', 1859, 8, 8),
 ('The Shining', 17, 10, '9780307743657', 1977, 6, 6),
 ('The Hobbit', 18, 4, '9780547928227', 1937, 12, 12);
+
+-- Insert Members
+INSERT INTO members (first_name, last_name, email, phone) VALUES
+('Rahul', 'Sharma', 'rahul.sharma@email.com', '9876543201'),
+('Priya', 'Patel', 'priya.patel@email.com', '9876543202'),
+('Amit', 'Verma', 'amit.verma@email.com', '9876543203'),
+('Sneha', 'Reddy', 'sneha.reddy@email.com', '9876543204'),
+('Arjun', 'Singh', 'arjun.singh@email.com', '9876543205'),
+('Neha', 'Gupta', 'neha.gupta@email.com', '9876543206'),
+('Karan', 'Mehta', 'karan.mehta@email.com', '9876543207'),
+('Anjali', 'Nair', 'anjali.nair@email.com', '9876543208'),
+('Vikram', 'Das', 'vikram.das@email.com', '9876543209'),
+('Pooja', 'Mishra', 'pooja.mishra@email.com', '9876543210');
+
+-- Insert Book Issues
+INSERT INTO book_issues (book_id, member_id, issue_date, due_date, return_date, status) VALUES
+(1, 1, '2026-07-01', '2026-07-15', '2026-07-12', 'RETURNED'),
+(2, 2, '2026-07-03', '2026-07-17', NULL, 'ISSUED'),
+(3, 3, '2026-06-20', '2026-07-04', NULL, 'OVERDUE'),
+(4, 4, '2026-07-05', '2026-07-19', '2026-07-18', 'RETURNED'),
+(5, 5, '2026-07-08', '2026-07-22', NULL, 'ISSUED'),
+(6, 6, '2026-06-25', '2026-07-09', NULL, 'OVERDUE'),
+(7, 7, '2026-07-10', '2026-07-24', NULL, 'ISSUED'),
+(8, 8, '2026-07-02', '2026-07-16', '2026-07-14', 'RETURNED'),
+(9, 9, '2026-07-09', '2026-07-23', NULL, 'ISSUED'),
+(10, 10, '2026-06-28', '2026-07-12', NULL, 'OVERDUE');
