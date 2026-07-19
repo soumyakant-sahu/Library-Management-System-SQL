@@ -29,7 +29,7 @@ create table books(
     foreign key(category_id)
 		references categories(category_id),
     isbn varchar(20) unique not null,
-    published_year year not null,
+    published_year INT,
     total_copies int not null,
     available_copies int not null,
     check(total_copies >=0),
