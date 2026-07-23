@@ -1,46 +1,38 @@
 USE library_management_system;
 
--- Transaction to issue a book
+-- ==========================================================
+-- TRANSACTION 1 : Issue a Book
+-- ==========================================================
 
 START TRANSACTION;
 
-INSERT INTO book_issues
-(
-    book_id,
-    member_id,
-    issue_date,
-    due_date,
-    status
-)
-VALUES
-(
+CALL IssueBook(
     5,
     2,
     CURDATE(),
-    DATE_ADD(CURDATE(), INTERVAL 14 DAY),
-    'ISSUED'
+    DATE_ADD(CURDATE(), INTERVAL 14 DAY)
 );
 
 COMMIT;
 
--- Transaction to return a book
+-- ==========================================================
+-- TRANSACTION 2 : Return a Book
+-- ==========================================================
 
 START TRANSACTION;
 
-UPDATE book_issues
-SET
-    return_date = CURDATE(),
-    status = 'RETURNED'
-WHERE issue_id = 3;
+CALL ReturnBook(3);
 
 COMMIT;
 
--- Transaction with rollback
+-- ==========================================================
+-- TRANSACTION 3 : Rollback Example
+-- ==========================================================
 
 START TRANSACTION;
 
 UPDATE books
-SET available_copies = available_copies - 5
+SET total_copies = total_copies + 5
 WHERE book_id = 1;
 
 ROLLBACK;

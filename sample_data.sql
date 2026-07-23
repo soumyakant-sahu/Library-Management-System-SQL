@@ -37,17 +37,19 @@ INSERT INTO categories (category_name) VALUES
 ('Horror');
 
 -- Insert Books
-INSERT INTO books (title, author_id, category_id, isbn, published_year, total_copies, available_copies) VALUES
+INSERT INTO books
+(title, author_id, category_id, isbn, published_year, total_copies, available_copies)
+VALUES
 ('Harry Potter and the Philosopher''s Stone', 1, 4, '9780747532743', 1997, 10, 10),
-('Harry Potter and the Chamber of Secrets', 1, 4, '9780747538486', 1998, 8, 8),
-('1984', 2, 1, '9780451524935', 1949, 12, 12),
+('Harry Potter and the Chamber of Secrets', 1, 4, '9780747538486', 1998, 8, 7),
+('1984', 2, 1, '9780451524935', 1949, 12, 11),
 ('Animal Farm', 2, 1, '9780451526342', 1945, 10, 10),
-('To Kill a Mockingbird', 3, 1, '9780061120084', 1960, 7, 7),
-('The Alchemist', 4, 8, '9780062315007', 1988, 15, 15),
-('Five Point Someone', 5, 1, '9788129135492', 2004, 9, 9),
+('To Kill a Mockingbird', 3, 1, '9780061120084', 1960, 7, 6),
+('The Alchemist', 4, 8, '9780062315007', 1988, 15, 14),
+('Five Point Someone', 5, 1, '9788129135492', 2004, 9, 8),
 ('The Blue Umbrella', 6, 1, '9780143334217', 1980, 6, 6),
-('Malgudi Days', 7, 1, '9788185986185', 1943, 11, 11),
-('The Da Vinci Code', 8, 3, '9780307474278', 2003, 13, 13),
+('Malgudi Days', 7, 1, '9788185986185', 1943, 11, 10),
+('The Da Vinci Code', 8, 3, '9780307474278', 2003, 13, 12),
 ('Murder on the Orient Express', 9, 3, '9780062693662', 1934, 10, 10),
 ('Pride and Prejudice', 10, 9, '9781503290563', 1813, 8, 8),
 ('War and Peace', 11, 6, '9780199232765', 1869, 5, 5),
@@ -73,7 +75,9 @@ INSERT INTO members (first_name, last_name, email, phone) VALUES
 ('Pooja', 'Mishra', 'pooja.mishra@email.com', '9876543210');
 
 -- Insert Book Issues
-INSERT INTO book_issues (book_id, member_id, issue_date, due_date, return_date, status) VALUES
+INSERT INTO book_issues
+(book_id, member_id, issue_date, due_date, return_date, status)
+VALUES
 (1, 1, '2026-07-01', '2026-07-15', '2026-07-12', 'RETURNED'),
 (2, 2, '2026-07-03', '2026-07-17', NULL, 'ISSUED'),
 (3, 3, '2026-06-20', '2026-07-04', NULL, 'OVERDUE'),

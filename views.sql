@@ -1,8 +1,19 @@
 USE library_management_system;
 
 -- ==========================================================
+-- DROP EXISTING VIEWS
+-- ==========================================================
+
+DROP VIEW IF EXISTS member_borrow_history;
+DROP VIEW IF EXISTS overdue_books;
+DROP VIEW IF EXISTS issued_books;
+DROP VIEW IF EXISTS available_books;
+DROP VIEW IF EXISTS book_details;
+
+-- ==========================================================
 -- VIEWS
 -- ==========================================================
+
 -- View 1: Book Details
 CREATE VIEW book_details AS
 SELECT
@@ -15,9 +26,9 @@ SELECT
     b.available_copies
 FROM books b
 JOIN authors a
-ON b.author_id = a.author_id
+    ON b.author_id = a.author_id
 JOIN categories c
-ON b.category_id = c.category_id;
+    ON b.category_id = c.category_id;
 
 -- View 2: Available Books
 CREATE VIEW available_books AS
@@ -39,9 +50,9 @@ SELECT
     bi.due_date
 FROM book_issues bi
 JOIN books b
-ON bi.book_id = b.book_id
+    ON bi.book_id = b.book_id
 JOIN members m
-ON bi.member_id = m.member_id
+    ON bi.member_id = m.member_id
 WHERE bi.status = 'ISSUED';
 
 -- View 4: Overdue Books
@@ -54,9 +65,9 @@ SELECT
     bi.due_date
 FROM book_issues bi
 JOIN books b
-ON bi.book_id = b.book_id
+    ON bi.book_id = b.book_id
 JOIN members m
-ON bi.member_id = m.member_id
+    ON bi.member_id = m.member_id
 WHERE bi.status = 'OVERDUE';
 
 -- View 5: Member Borrow History
@@ -66,10 +77,11 @@ SELECT
     CONCAT(m.first_name, ' ', m.last_name) AS member_name,
     b.title,
     bi.issue_date,
+    bi.due_date,
     bi.return_date,
     bi.status
 FROM members m
 JOIN book_issues bi
-ON m.member_id = bi.member_id
+    ON m.member_id = bi.member_id
 JOIN books b
-ON bi.book_id = b.book_id;
+    ON bi.book_id = b.book_id;

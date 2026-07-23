@@ -1,9 +1,20 @@
 USE library_management_system;
 
 -- ==========================================================
--- FUNCTIONS
+-- DROP EXISTING FUNCTIONS
 -- ==========================================================
+
+DROP FUNCTION IF EXISTS TotalBooks;
+DROP FUNCTION IF EXISTS AvailableBooks;
+DROP FUNCTION IF EXISTS TotalMembers;
+DROP FUNCTION IF EXISTS BooksBorrowed;
+DROP FUNCTION IF EXISTS OverdueBooks;
+
 DELIMITER $$
+
+-- ==========================================================
+-- Total Number of Books
+-- ==========================================================
 
 CREATE FUNCTION TotalBooks()
 RETURNS INT
@@ -18,10 +29,9 @@ BEGIN
     RETURN total;
 END $$
 
-DELIMITER ;
-SELECT TotalBooks();
-
-DELIMITER $$
+-- ==========================================================
+-- Total Available Book Copies
+-- ==========================================================
 
 CREATE FUNCTION AvailableBooks()
 RETURNS INT
@@ -29,17 +39,16 @@ DETERMINISTIC
 BEGIN
     DECLARE available INT;
 
-    SELECT SUM(available_copies)
+    SELECT COALESCE(SUM(available_copies), 0)
     INTO available
     FROM books;
 
     RETURN available;
 END $$
 
-DELIMITER ;
-SELECT AvailableBooks();
-
-DELIMITER $$
+-- ==========================================================
+-- Total Members
+-- ==========================================================
 
 CREATE FUNCTION TotalMembers()
 RETURNS INT
@@ -54,12 +63,13 @@ BEGIN
     RETURN total;
 END $$
 
-DELIMITER ;
-SELECT TotalMembers();
+-- ==========================================================
+-- Total Books Borrowed by a Member
+-- ==========================================================
 
-DELIMITER $$
-
-CREATE FUNCTION BooksBorrowed(memberId INT)
+CREATE FUNCTION BooksBorrowed(
+    p_member_id INT
+)
 RETURNS INT
 DETERMINISTIC
 BEGIN
@@ -68,15 +78,14 @@ BEGIN
     SELECT COUNT(*)
     INTO borrowed
     FROM book_issues
-    WHERE member_id = memberId;
+    WHERE member_id = p_member_id;
 
     RETURN borrowed;
 END $$
 
-DELIMITER ;
-SELECT BooksBorrowed(1);
-
-DELIMITER $$
+-- ==========================================================
+-- Total Overdue Books
+-- ==========================================================
 
 CREATE FUNCTION OverdueBooks()
 RETURNS INT
@@ -87,11 +96,9 @@ BEGIN
     SELECT COUNT(*)
     INTO overdue
     FROM book_issues
-    WHERE status='OVERDUE';
+    WHERE status = 'OVERDUE';
 
     RETURN overdue;
 END $$
 
 DELIMITER ;
-SELECT OverdueBooks();
-

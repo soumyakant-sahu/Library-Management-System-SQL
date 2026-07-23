@@ -5,19 +5,24 @@ USE library_management_system;
 -- ==========================================================
 
 -- 1. View all authors
-SELECT * FROM authors;
+SELECT *
+FROM authors;
 
 -- 2. View all categories
-SELECT * FROM categories;
+SELECT *
+FROM categories;
 
 -- 3. View all books
-SELECT * FROM books;
+SELECT *
+FROM books;
 
 -- 4. View all members
-SELECT * FROM members;
+SELECT *
+FROM members;
 
 -- 5. View all book issue records
-SELECT * FROM book_issues;
+SELECT *
+FROM book_issues;
 
 -- ==========================================================
 -- JOIN QUERIES
@@ -33,11 +38,12 @@ SELECT
     b.available_copies
 FROM books b
 JOIN authors a
-ON b.author_id = a.author_id
+    ON b.author_id = a.author_id
 JOIN categories c
-ON b.category_id = c.category_id;
+    ON b.category_id = c.category_id
+ORDER BY b.book_id;
 
--- 7. Display all issued books with member details
+-- 7. Display all issued records with member details
 SELECT
     bi.issue_id,
     m.first_name,
@@ -49,11 +55,12 @@ SELECT
     bi.status
 FROM book_issues bi
 JOIN books b
-ON bi.book_id = b.book_id
+    ON bi.book_id = b.book_id
 JOIN members m
-ON bi.member_id = m.member_id;
+    ON bi.member_id = m.member_id
+ORDER BY bi.issue_id;
 
--- 8. Display books currently issued
+-- 8. Display currently issued books
 SELECT
     b.title,
     m.first_name,
@@ -62,10 +69,11 @@ SELECT
     bi.due_date
 FROM book_issues bi
 JOIN books b
-ON bi.book_id = b.book_id
+    ON bi.book_id = b.book_id
 JOIN members m
-ON bi.member_id = m.member_id
-WHERE bi.status='ISSUED';
+    ON bi.member_id = m.member_id
+WHERE bi.status = 'ISSUED'
+ORDER BY bi.due_date;
 
 -- 9. Display overdue books
 SELECT
@@ -75,10 +83,11 @@ SELECT
     bi.due_date
 FROM book_issues bi
 JOIN books b
-ON bi.book_id=b.book_id
+    ON bi.book_id = b.book_id
 JOIN members m
-ON bi.member_id=m.member_id
-WHERE bi.status='OVERDUE';
+    ON bi.member_id = m.member_id
+WHERE bi.status = 'OVERDUE'
+ORDER BY bi.due_date;
 
 -- 10. Display returned books
 SELECT
@@ -88,10 +97,11 @@ SELECT
     bi.return_date
 FROM book_issues bi
 JOIN books b
-ON bi.book_id=b.book_id
+    ON bi.book_id = b.book_id
 JOIN members m
-ON bi.member_id=m.member_id
-WHERE bi.status='RETURNED';
+    ON bi.member_id = m.member_id
+WHERE bi.status = 'RETURNED'
+ORDER BY bi.return_date;
 
 -- ==========================================================
 -- AGGREGATE FUNCTIONS
@@ -111,8 +121,9 @@ SELECT
     COUNT(b.book_id) AS total_books
 FROM categories c
 LEFT JOIN books b
-ON c.category_id=b.category_id
-GROUP BY c.category_name;
+    ON c.category_id = b.category_id
+GROUP BY c.category_name
+ORDER BY total_books DESC;
 
 -- 14. Count books by each author
 SELECT
@@ -120,18 +131,19 @@ SELECT
     COUNT(b.book_id) AS total_books
 FROM authors a
 LEFT JOIN books b
-ON a.author_id=b.author_id
-GROUP BY a.author_name;
+    ON a.author_id = b.author_id
+GROUP BY a.author_name
+ORDER BY total_books DESC;
 
--- 15. Total issued books
-SELECT COUNT(*) AS total_issued
+-- 15. Count currently issued books
+SELECT COUNT(*) AS total_issued_books
 FROM book_issues
-WHERE status='ISSUED';
+WHERE status = 'ISSUED';
 
--- 16. Total overdue books
+-- 16. Count overdue books
 SELECT COUNT(*) AS overdue_books
 FROM book_issues
-WHERE status='OVERDUE';
+WHERE status = 'OVERDUE';
 
 -- ==========================================================
 -- GROUP BY & HAVING
@@ -139,21 +151,30 @@ WHERE status='OVERDUE';
 
 -- 17. Members who borrowed more than one book
 SELECT
-    member_id,
-    COUNT(*) AS books_borrowed
-FROM book_issues
-GROUP BY member_id
-HAVING COUNT(*) > 1;
+    m.member_id,
+    m.first_name,
+    m.last_name,
+    COUNT(bi.issue_id) AS books_borrowed
+FROM members m
+JOIN book_issues bi
+    ON m.member_id = bi.member_id
+GROUP BY
+    m.member_id,
+    m.first_name,
+    m.last_name
+HAVING COUNT(bi.issue_id) > 1
+ORDER BY books_borrowed DESC;
 
 -- 18. Authors having more than one book
 SELECT
     a.author_name,
-    COUNT(*) AS total_books
-FROM books b
-JOIN authors a
-ON b.author_id=a.author_id
+    COUNT(b.book_id) AS total_books
+FROM authors a
+JOIN books b
+    ON a.author_id = b.author_id
 GROUP BY a.author_name
-HAVING COUNT(*)>1;
+HAVING COUNT(b.book_id) > 1
+ORDER BY total_books DESC;
 
 -- ==========================================================
 -- SUBQUERIES
@@ -162,7 +183,7 @@ HAVING COUNT(*)>1;
 -- 19. Book(s) with maximum copies
 SELECT *
 FROM books
-WHERE total_copies=(
+WHERE total_copies = (
     SELECT MAX(total_copies)
     FROM books
 );
@@ -172,13 +193,13 @@ SELECT
     m.first_name,
     m.last_name
 FROM members m
-WHERE member_id IN(
+WHERE m.member_id IN (
     SELECT member_id
     FROM book_issues
     GROUP BY member_id
-    HAVING COUNT(*)=(
+    HAVING COUNT(*) = (
         SELECT MAX(book_count)
-        FROM(
+        FROM (
             SELECT COUNT(*) AS book_count
             FROM book_issues
             GROUP BY member_id
@@ -190,7 +211,7 @@ WHERE member_id IN(
 -- SEARCH QUERIES
 -- ==========================================================
 
--- 21. Search books by title
+-- 21. Search books containing 'Harry'
 SELECT *
 FROM books
 WHERE title LIKE '%Harry%';
@@ -201,8 +222,8 @@ SELECT
     a.author_name
 FROM books b
 JOIN authors a
-ON b.author_id=a.author_id
-WHERE a.author_name='J.K. Rowling';
+    ON b.author_id = a.author_id
+WHERE a.author_name = 'J.K. Rowling';
 
 -- 23. Search books by category
 SELECT
@@ -210,8 +231,8 @@ SELECT
     c.category_name
 FROM books b
 JOIN categories c
-ON b.category_id=c.category_id
-WHERE c.category_name='Fantasy';
+    ON b.category_id = c.category_id
+WHERE c.category_name = 'Fantasy';
 
 -- ==========================================================
 -- MISCELLANEOUS
@@ -222,13 +243,14 @@ SELECT
     title,
     available_copies
 FROM books
-WHERE available_copies>0;
+WHERE available_copies > 0
+ORDER BY title;
 
 -- 25. Books never issued
 SELECT
     title
 FROM books
-WHERE book_id NOT IN(
+WHERE book_id NOT IN (
     SELECT DISTINCT book_id
     FROM book_issues
 );
@@ -238,7 +260,7 @@ SELECT
     first_name,
     last_name
 FROM members
-WHERE member_id NOT IN(
+WHERE member_id NOT IN (
     SELECT DISTINCT member_id
     FROM book_issues
 );
